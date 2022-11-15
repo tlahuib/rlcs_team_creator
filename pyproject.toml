@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "rlcs-team-creator"
+version = "0.1.0"
+description = "Code to evaluate and create new RLCS teams."
+authors = ["Tlahui Bolanos <tabm96@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "rlcs_team_creator"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.28.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
