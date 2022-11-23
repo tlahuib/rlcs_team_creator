@@ -2,6 +2,8 @@
 
 -- Events table
 create table rocket_league.events (
+	created_at timestamp not null default now(),
+	updated_at timestamp not null default now(),
 	id varchar(30) not null constraint events_pk primary key,
 	slug varchar not null,
 	"name" varchar not null,
@@ -18,6 +20,8 @@ create table rocket_league.events (
 	
 -- Events stages table
 create table rocket_league.events_stages (
+	created_at timestamp not null default now(),
+	updated_at timestamp not null default now(),
 	event_id varchar(30) not null,
 	id int not null,
 	"name" varchar not null,
@@ -38,4 +42,10 @@ create table rocket_league.events_stages (
 	constraint stages_fk
 		foreign key(event_id)
 			references rocket_league.events(id)
+);
+
+
+-- Matches table
+create table rocket_league.matches (
+	
 );
