@@ -39,7 +39,7 @@ create table rocket_league.events_stages (
 	location_country varchar(10),
 	constraint stages_pk
 		primary key (event_id, id),
-	constraint stages_fk
+	constraint stages_events_fk
 		foreign key(event_id)
 			references rocket_league.events(id)
 );
@@ -165,3 +165,112 @@ create table rocket_league.matches (
 --		foreign key(event_id, stage_id)
 --			references rocket_league.events_stages(event_id, id)
 );
+
+
+-- Player performance by Match table
+create table rocket_league.matches_players (
+	created_at timestamp not null default now(),
+	updated_at timestamp not null default now(),
+	event_id varchar(30) not null,
+	stage_id int,
+	match_id varchar(30) not null,
+	team_id varchar(30),
+	color varchar(10) not null,
+	id varchar(30)not null,
+	shots int,
+	goals int,
+	saves int,
+	assists int,
+	score int,
+	shooting_percentage numeric,
+	advanced_goal_participation numeric,
+	advanced_rating numeric,
+	boost_bpm int,
+	boost_bcpm numeric,
+	boost_avg_amount numeric,
+	boost_amount_collected int,
+	boost_amount_stolen int,
+	boost_amount_collected_big int,
+	boost_amount_stolen_big int,
+	boost_amount_collected_small int,
+	boost_amount_stolen_small int,
+	boost_count_collected_big int,
+	boost_count_stolen_big int,
+	boost_count_collected_small int,
+	boost_count_stolen_small int,
+	boost_amount_overfill int,
+	boost_amount_overfill_stolen int,
+	boost_amount_used_while_supersonic int,
+	boost_time_zero_boost numeric,
+	boost_percent_zero_boost numeric,
+	boost_time_full_boost numeric,
+	boost_percent_full_boost numeric,
+	boost_time_boost0_to25 numeric,
+	boost_time_boost25_to50 numeric,
+	boost_time_boost50_to75 numeric,
+	boost_time_boost75_to100 numeric,
+	boost_percent_boost0_to25 numeric,
+	boost_percent_boost25_to50 numeric,
+	boost_percent_boost50_to75 numeric,
+	boost_percent_boost75_to100 numeric,
+	movement_avg_speed numeric,
+	movement_total_distance numeric,
+	movement_time_supersonic_speed numeric,
+	movement_time_boost_speed numeric,
+	movement_time_slow_speed numeric,
+	movement_time_ground numeric,
+	movement_time_low_air numeric,
+	movement_time_high_air numeric,
+	movement_time_powerslide numeric,
+	movement_count_powerslide int,
+	movement_avg_powerslide_duration numeric,
+	movement_avg_speed_percentage numeric,
+	movement_percent_slow_speed numeric,
+	movement_percent_boost_speed numeric,
+	movement_percent_supersonic_speed numeric,
+	movement_percent_ground numeric,
+	movement_percent_low_air numeric,
+	movement_percent_high_air numeric,
+	positioning_avg_distance_to_ball numeric,
+	positioning_avg_distance_to_ball_possession numeric,
+	positioning_avg_distance_to_ball_no_possession numeric,
+	positioning_avg_distance_to_mates numeric,
+	positioning_time_defensive_third numeric,
+	positioning_time_neutral_third numeric,
+	positioning_time_offensive_third numeric,
+	positioning_time_defensive_half numeric,
+	positioning_time_offensive_half numeric,
+	positioning_time_behind_ball numeric,
+	positioning_time_infront_ball numeric,
+	positioning_time_most_back numeric,
+	positioning_time_most_forward numeric,
+	positioning_goals_against_while_last_defender int,
+	positioning_time_closest_to_ball numeric,
+	positioning_time_farthest_from_ball numeric,
+	positioning_percent_defensive_third numeric,
+	positioning_percent_offensive_third numeric,
+	positioning_percent_neutral_third numeric,
+	positioning_percent_defensive_half numeric,
+	positioning_percent_offensive_half numeric,
+	positioning_percent_behind_ball numeric,
+	positioning_percent_infront_ball numeric,
+	positioning_percent_most_back numeric,
+	positioning_percent_most_forward numeric,
+	positioning_percent_closest_to_ball numeric,
+	positioning_percent_farthest_from_ball numeric,
+	demo_inflicted int,
+	demo_taken int,
+	player_substitute bool,
+	player_coach bool,
+	constraint matchplayer_pk
+		primary key (match_id, id),
+	constraint matchplayer_event_fk
+		foreign key(event_id)
+			references rocket_league.events(id),
+--	constraint matchplayer_stage_fk
+--		foreign key(event_id, stage_id)
+--			references rocket_league.events_stages(event_id, id),
+	constraint matchplayer_match_fk
+		foreign key(match_id)
+			references rocket_league.matches(id)
+)

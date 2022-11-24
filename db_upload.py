@@ -22,11 +22,18 @@ with open('api_columns.json') as f:
 def format_df(df: pd.DataFrame, df_name: str):
     _df = df.copy()
     col_dict = api_columns[df_name]
-    for col in df.columns:
-        if col not in set(col_dict.keys()):
-            _df.drop(columns=[col], inplace=True)
-        else:
-            _df.rename(columns={col: col_dict[col].lower()}, inplace=True)
+    col_set = set(col_dict.keys())
+    
+    drop_cols = set(_df.columns) - col_set
+    rename_cols = {col: col_dict[col] for col in _df.columns if col in col_set}
+
+    _df.drop(columns=drop_cols, inplace=True)
+    _df.rename(columns=rename_cols, inplace=True)
+    # for col in df.columns:
+    #     if col not in set(col_dict.keys()):
+    #         _df.drop(columns=[col], inplace=True)
+    #     else:
+    #         _df.rename(columns={col: col_dict[col].lower()}, inplace=True)
     return _df
 
 # General page loop
@@ -61,13 +68,31 @@ def load_events(_dict):
 
 
 def load_matches(_dict):
+    # Format match data
     matches = pd.json_normalize(_dict, sep='_')
     
     matches = format_df(matches, 'matches')
 
+    # Format players data
+    blue_players = [item for item in _dict if 'blue' in set(item.keys())]
+    blue_players = [item for item in blue_players if 'players' in set(item['blue'].keys())]
+    blue_players = pd.json_normalize(blue_players, sep='_', record_path=[['blue', 'players']], meta=['_id', ['event', '_id'], ['stage', '_id'], ['blue', 'team', 'team', '_id']], meta_prefix='match')
+    blue_players['color'] = 'blue'
+    
+    orange_players = [item for item in _dict if 'orange' in set(item.keys())]
+    orange_players = [item for item in orange_players if 'players' in set(item['orange'].keys())]
+    orange_players = pd.json_normalize(orange_players, sep='_', record_path=[['orange', 'players']], meta=['_id', ['event', '_id'], ['stage', '_id'], ['orange', 'team', 'team', '_id']], meta_prefix='match')
+    orange_players['color'] = 'orange'
+
+    players = pd.concat([blue_players, orange_players])
+    del blue_players, orange_players
+    players = format_df(players, 'matches_players')
+    players.drop_duplicates(subset=['match_id', 'id'], inplace=True)
+
     # Upload to db
     matches.to_sql(name='matches', con=cnx, schema='rocket_league', if_exists='append', index=False, method='multi')
-    print(f'\tLoaded {matches.__len__()} rows to matches.')
+    players.to_sql(name='matches_players', con=cnx, schema='rocket_league', if_exists='append', index=False, method='multi')
+    print(f'\tLoaded {matches.__len__()} rows to matches and {players.__len__()} rows to matches_players.')
 
     return matches
 
@@ -76,5 +101,15 @@ if __name__ == '__main__':
     # # Load events
     # load_pages('https://zsr.octane.gg/events', 'events', load_events)
 
-    # Load matches
-    load_pages('https://zsr.octane.gg/matches', 'matches', load_matches)
+    # # Load matches
+    # load_pages('https://zsr.octane.gg/matches', 'matches', load_matches)
+
+    # with open('test/outputs/api_matches.json') as f:
+    #     _dict = json.load(f)
+
+    
+
+    # print(players)
+    # print(players.info(verbose=1))
+    
+    # blue_players.columns.to_frame().to_csv('game_cols.csv')
