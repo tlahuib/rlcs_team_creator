@@ -405,7 +405,7 @@ create table rocket_league.games (
 create table rocket_league.games_players (
 	created_at timestamp not null default now(),
 	updated_at timestamp not null default now(),
-	event_id varchar(30) not null,
+	event_id varchar(30),
 	stage_id int,
 	match_id varchar(30) not null,
 	game_id varchar(30) not null,

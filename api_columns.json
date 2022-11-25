@@ -439,8 +439,8 @@
         "player_coach": "coach",
         "player_substitute": "substitute",
         "game_id": "game_id",
-        "gameevent__id": "event_id",
-        "gamestage__id": "stage_id",
+        "gamematch_event__id": "event_id",
+        "gamematch_stage__id": "stage_id",
         "gamematch__id": "match_id",
         "color": "color"        
     }
