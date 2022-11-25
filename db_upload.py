@@ -53,6 +53,43 @@ def load_pages(url, key_name, format_function, per_page=500, params={}):
 
 
 # Data-loading functions
+def load_teams(_dict):
+    # Format teams data
+    teams = pd.json_normalize(_dict, sep='_')
+
+    teams = format_df(teams, 'teams')
+
+    # Upload to db
+    teams.to_sql(name='teams', con=cnx, schema='rocket_league',
+                 if_exists='append', index=False, method='multi')
+    print(f'\tLoaded {teams.__len__()} rows to teams.')
+
+    return teams
+
+
+def load_players(_dict):
+    # Format players data
+    players = pd.json_normalize(_dict, sep='_')
+
+    players = format_df(players, 'players')
+
+    # Format accounts data
+    accounts = [item for item in _dict if 'accounts' in set(item.keys())]
+    accounts = pd.json_normalize(accounts, sep='_', record_path='accounts', meta='_id', meta_prefix='player')
+
+    accounts = format_df(accounts,'players_accounts')
+    accounts.dropna(inplace=True)
+
+    # Upload to db
+    players.to_sql(name='players', con=cnx, schema='rocket_league',
+                 if_exists='append', index=False, method='multi')
+    accounts.to_sql(name='players_accounts', con=cnx, schema='rocket_league',
+                 if_exists='append', index=False, method='multi')
+    print(f'\tLoaded {players.__len__()} rows to players and {accounts.__len__()} to players_accounts.')
+
+    return players, accounts
+
+
 def load_events(_dict):
     events = pd.json_normalize(_dict, sep='_')
     stages = pd.json_normalize(_dict, sep='_', record_path='stages', meta='_id', meta_prefix='event')
@@ -189,6 +226,12 @@ def load_games(_dict):
 
 
 if __name__ == '__main__':
+    # # Load teams
+    # load_pages('https://zsr.octane.gg/teams', 'teams', load_teams)
+
+    # Load players
+    load_pages('https://zsr.octane.gg/players', 'players', load_players)
+
     # # Load events
     # load_pages('https://zsr.octane.gg/events', 'events', load_events)
 
@@ -198,12 +241,3 @@ if __name__ == '__main__':
     # # Load games
     # load_pages('https://zsr.octane.gg/games', 'games', load_games)
 
-    with open('test/outputs/api_players.json') as f:
-        _dict = json.load(f)
-
-    players = pd.json_normalize(_dict, sep='_')
-
-    print(players)
-    print(players.info(verbose=1))
-
-    # games.columns.to_frame().to_csv('game_cols.csv')

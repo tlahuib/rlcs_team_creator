@@ -1,5 +1,46 @@
 -- This code is written for Postgres
 
+-- Teams table
+create table rocket_league.teams (
+	created_at timestamp not null default now(),
+	updated_at timestamp not null default now(),
+	id varchar(30) not null constraint teams_pk primary key,
+	slug varchar(100),
+	"name" varchar not null,
+	region varchar(10),
+	image varchar,
+	relevant bool
+);
+
+-- Players table
+create table rocket_league.players (
+	created_at timestamp not null default now(),
+	updated_at timestamp not null default now(),
+	team_id varchar(30),
+	id varchar(30) not null constraint players_pk primary key,
+	slug varchar(100),
+	tag varchar,
+	country varchar(10),
+	"name" varchar,
+	coach bool,
+	relevant bool,
+	substitute bool
+--	constraint players_teams_fk
+--		foreign key (team_id)
+--			references rocket_league.teams(id)
+);
+
+-- Players accounts table
+create table rocket_league.players_accounts (
+	id serial primary key,
+	player_id varchar(30) not null,
+	platform varchar(50) not null,
+	platform_id varchar(50) not null,
+	constraint playeraccount_players_fk
+		foreign key (player_id)
+			references rocket_league.players(id)
+);
+
 -- Events table
 create table rocket_league.events (
 	created_at timestamp not null default now(),

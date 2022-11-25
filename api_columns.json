@@ -1,4 +1,28 @@
 {
+    "teams": {
+        "_id": "id",
+        "slug": "slug",
+        "name": "name",
+        "region": "region",
+        "image": "image",
+        "relevant": "relevant"        
+    },
+    "players": {
+        "_id": "id",
+        "slug": "slug",
+        "tag": "tag",
+        "country": "country",
+        "name": "name",
+        "coach": "coach",
+        "relevant": "relevant",
+        "team__id": "team_id",
+        "substitute": "substitute"        
+    },
+    "players_accounts": {
+        "player_id": "player_id",
+        "platform": "platform",
+        "id": "platform_id"        
+    },
     "events": {
         "_id": "id",
         "slug": "slug",
