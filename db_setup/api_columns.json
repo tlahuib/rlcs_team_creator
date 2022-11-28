@@ -255,7 +255,7 @@
         "match_id": "match_id",
         "matchevent__id": "event_id",
         "matchstage__id": "stage_id",
-        "matchblue_team_team__id": "team_id",
+        "team_id": "team_id",
         "color": "color"        
     },
     "games": {
@@ -459,7 +459,7 @@
         "stats_positioning_percentFarthestFromBall": "positioning_percent_farthest_from_ball",
         "stats_demo_inflicted": "demo_inflicted",
         "stats_demo_taken": "demo_taken",
-        "player_team__id": "team_id",
+        "team_id": "team_id",
         "player_coach": "coach",
         "player_substitute": "substitute",
         "game_id": "game_id",

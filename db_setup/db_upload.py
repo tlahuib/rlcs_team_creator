@@ -130,6 +130,7 @@ def load_matches(_dict):
         errors='ignore'
     )
     blue_players['color'] = 'blue'
+    blue_players.rename(columns={'matchblue_team_team__id': 'team_id'}, inplace=True)
 
     orange_players = [item for item in _dict if 'orange' in set(item.keys())]
     orange_players = [
@@ -148,6 +149,7 @@ def load_matches(_dict):
         errors='ignore'
     )
     orange_players['color'] = 'orange'
+    orange_players.rename(columns={'matchorange_team_team__id': 'team_id'}, inplace=True)
 
     players = pd.concat([blue_players, orange_players])
     del blue_players, orange_players
@@ -189,6 +191,7 @@ def load_games(_dict):
         errors='ignore'
     )
     blue_players['color'] = 'blue'
+    blue_players.rename(columns={'gameblue_team_team__id': 'team_id'}, inplace=True)
 
     orange_players = [item for item in _dict if 'orange' in set(item.keys())]
     orange_players = [item for item in orange_players if 'players' in set(item['orange'].keys())]
@@ -201,12 +204,13 @@ def load_games(_dict):
             ['match', 'event', '_id'], 
             ['match', 'stage', '_id'], 
             ['match', '_id'], 
-            ['blue', 'team', 'team', '_id']
+            ['orange', 'team', 'team', '_id']
         ], 
         meta_prefix='game', 
         errors='ignore'
     )
     orange_players['color'] = 'orange'
+    orange_players.rename(columns={'gameorange_team_team__id': 'team_id'}, inplace=True)
 
     players = pd.concat([blue_players, orange_players])
     del blue_players, orange_players
@@ -223,7 +227,7 @@ def load_games(_dict):
     return games, players
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
     # # print(json.dumps(api_columns, indent=4))
 
     # # Load teams
@@ -235,9 +239,8 @@ def load_games(_dict):
     # # Load events
     # load_pages('https://zsr.octane.gg/events', 'events', load_events)
 
-    # # Load matches
-    # load_pages('https://zsr.octane.gg/matches', 'matches', load_matches)
+    # Load matches
+    load_pages('https://zsr.octane.gg/matches', 'matches', load_matches)
 
-    # # Load games
-    # load_pages('https://zsr.octane.gg/games', 'games', load_games)
-
+    # Load games
+    load_pages('https://zsr.octane.gg/games', 'games', load_games)
