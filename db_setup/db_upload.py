@@ -7,8 +7,6 @@ import pandas as pd
 import sqlalchemy as db
 from dotenv import load_dotenv
 
-# import octane_api as oapi
-
 load_dotenv()
 
 # DB connection
@@ -16,7 +14,7 @@ cnx = db.create_engine(
     f"postgresql://{getenv('USER')}:{getenv('PASS')}@{getenv('HOST')}:{getenv('PORT')}/{getenv('DB')}")
 
 # Load colnames dict
-with open('api_columns.json') as f:
+with open('db_setup/api_columns.json') as f:
     api_columns = json.load(f)
 
 # General format function
@@ -225,12 +223,14 @@ def load_games(_dict):
     return games, players
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
+    # # print(json.dumps(api_columns, indent=4))
+
     # # Load teams
     # load_pages('https://zsr.octane.gg/teams', 'teams', load_teams)
 
-    # Load players
-    load_pages('https://zsr.octane.gg/players', 'players', load_players)
+    # # Load players
+    # load_pages('https://zsr.octane.gg/players', 'players', load_players)
 
     # # Load events
     # load_pages('https://zsr.octane.gg/events', 'events', load_events)
