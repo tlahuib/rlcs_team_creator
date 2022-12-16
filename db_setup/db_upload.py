@@ -19,22 +19,9 @@ with open('db_setup/api_columns.json') as f:
 
 table_dates = {'events': 'start_date', 'matches': 'date', 'games': 'date'}
 
-# General format function
-def format_df(df: pd.DataFrame, df_name: str):
-    _df = df.copy()
-    col_dict = api_columns[df_name]
-    col_set = set(col_dict.keys())
 
-    drop_cols = set(_df.columns) - col_set
-    rename_cols = {col: col_dict[col] for col in _df.columns if col in col_set}
-
-    _df.drop(columns=drop_cols, inplace=True)
-    _df.rename(columns=rename_cols, inplace=True)
-    return _df
-
+# General Functions --------------------------------------------------------------------------
 # General page loop
-
-
 def load_pages(url:str , key_name: str, format_function, params={'perPage': 500}):
     print(f'Loading data into db for {url}...')
     _params = deepcopy(params)
@@ -53,6 +40,21 @@ def load_pages(url:str , key_name: str, format_function, params={'perPage': 500}
         page += 1
 
 
+# General format function
+def format_df(df: pd.DataFrame, df_name: str):
+    _df = df.copy()
+    col_dict = api_columns[df_name]
+    col_set = set(col_dict.keys())
+
+    drop_cols = set(_df.columns) - col_set
+    rename_cols = {col: col_dict[col] for col in _df.columns if col in col_set}
+
+    _df.drop(columns=drop_cols, inplace=True)
+    _df.rename(columns=rename_cols, inplace=True)
+    return _df
+
+
+# Separate new records from existing ones
 def get_new_records(api_df: pd.DataFrame, table: str, col: str = 'id'):
     db_df = pd.read_sql(f'select {col} from rocket_league.{table}', cnx)
     loaded_records = set(db_df[col])
@@ -61,7 +63,8 @@ def get_new_records(api_df: pd.DataFrame, table: str, col: str = 'id'):
     return api_df[api_df[col].apply(lambda x: x in new_records)]
 
 
-# Data-loading functions
+
+# Data-loading functions--------------------------------------------------------------------------
 def load_teams(_dict: dict):
     # Format teams data
     teams = pd.json_normalize(_dict, sep='_')
