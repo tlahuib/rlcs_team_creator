@@ -1,3 +1,20 @@
+from os import getenv
+
+import pandas as pd
+import sqlalchemy as db
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Connect to database
+cnx = db.create_engine(f"postgresql://{getenv('USER')}:{getenv('PASS')}@{getenv('HOST')}:{getenv('PORT')}/{getenv('DB')}")
+
+# Db functions
+def df_from_table(table_name: str):
+    return pd.read_sql(f'select * from {table_name}', cnx)
+
+# Plotting functions
+
 image_path = 'C:/Users/tabm9/OneDrive - Caissa Analytica/Documents/DS_Portfolio/Projects/Images/RLCS/'
 
 line_color = '#f1f5f9'
