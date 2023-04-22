@@ -10,7 +10,9 @@ load_dotenv()
 cnx = db.create_engine(f"postgresql://{getenv('USER')}:{getenv('PASS')}@{getenv('HOST')}:{getenv('PORT')}/{getenv('DB')}")
 
 # Db functions
-def df_from_table(table_name: str):
+def df_from_table(table_name: str, order: str=None):
+    if order:
+        return pd.read_sql(f'select * from {table_name} order by {order}', cnx)
     return pd.read_sql(f'select * from {table_name}', cnx)
 
 # Plotting functions
